@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Sunswine</string>
+    <string name="hello_world">Hello world!</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_refresh" translatable="false">Refresh</string>
+    <string name="action_map">Map Location</string>
+    <string name="action_share">Share</string>
+
+    <string name="title_activity_detail">Detail</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="pref_location_label">Location</string>
+    <string name="pref_location_key" translatable="false">location</string>
+    <string name="pref_location_default" translatable="false">344979</string>
+
+    <string name="pref_tempunit_label">Temperature Unit</string>
+    <string name="pref_tempunit_key">tempunit</string>
+    <string name="pref_tempunit_metric" translatable="false">metric</string>
+    <string name="pref_tempunit_imperial" translatable="false">imperial</string>
+
+</resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:key="@string/pref_location_key"
+        android:title="@string/pref_location_label"
+        android:defaultValue="@string/pref_location_default"
+        android:inputType="text"
+        android:singleLine="true">
+
+    </EditTextPreference>
+
+    <ListPreference
+        android:key="@string/pref_tempunit_key"
+        android:title="@string/pref_tempunit_label"
+        android:defaultValue="@string/pref_tempunit_metric"
+        android:entries="@array/pref_tempunit_labels"
+        android:entryValues="@array/pref_tempunit_values"
+        >
+
+    </ListPreference>
+</PreferenceScreen>
