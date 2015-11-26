@@ -73,7 +73,7 @@ public class ForecastFragment extends Fragment {//implements LoaderManager.Loade
     }
 
 /*    private void updateWeather(){
-        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
+        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity(), forecastAdapter);
         weatherTask.execute(Utility.getPreferredLocation(getActivity()));
     }*/
 

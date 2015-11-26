@@ -35,6 +35,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.micky.sunswine.MainActivity" />
         </activity>
+        
+        <provider
+            android:authorities="com.example.micky.sunswine"
+            android:name="com.example.micky.sunswine.data.WeatherProvider"></provider>
     </application>
-
+    
 </manifest>
