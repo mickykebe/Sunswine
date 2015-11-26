@@ -1,6 +1,5 @@
 package com.example.micky.sunswine;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -16,8 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.micky.sunswine.data.WeatherContract;
@@ -29,7 +26,7 @@ import java.util.Date;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ForecastFragment extends Fragment {//implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = ForecastFragment.class.getSimpleName();
 
@@ -38,7 +35,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     private static final String[] FORECAST_COLUMNS = {
             WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
-            WeatherContract.WeatherEntry.COLUMN_DATETEXT,
+            WeatherContract.WeatherEntry.COLUMN_DATE,
             WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
             WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
             WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
@@ -58,11 +55,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     }
 
-    @Override
+/*    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().initLoader(FORECAST_LOADER, null, this);
-    }
+    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,15 +72,15 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         inflater.inflate(R.menu.menu_forecastfragment, menu);
     }
 
-    private void updateWeather(){
+/*    private void updateWeather(){
         FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
         weatherTask.execute(Utility.getPreferredLocation(getActivity()));
-    }
+    }*/
 
     @Override
     public void onStart() {
         super.onStart();
-        updateWeather();
+        //updateWeather();
     }
 
     @Override
@@ -95,7 +92,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            updateWeather();
+            //updateWeather();
             return true;
         }
 
@@ -123,7 +120,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 R.layout.list_item_forecast,
                 null,
                 new String[]{
-                        WeatherContract.WeatherEntry.COLUMN_DATETEXT,
+                        WeatherContract.WeatherEntry.COLUMN_DATE,
                         WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
                         WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
                         WeatherContract.WeatherEntry.COLUMN_MIN_TEMP
@@ -156,12 +153,12 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         return rootView;
     }
 
-    @Override
+ /*   @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         //Only return data after today
         String startDate = WeatherContract.getDbDateString(new Date());
 
-        String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATETEXT + " ASC";
+        String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
         mLocation = Utility.getPreferredLocation(getActivity());
         Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(mLocation, startDate);
 
@@ -184,5 +181,5 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         forecastAdapter.swapCursor(null);
-    }
+    }*/
 }
