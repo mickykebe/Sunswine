@@ -38,7 +38,9 @@
         
         <provider
             android:authorities="com.example.micky.sunswine"
-            android:name="com.example.micky.sunswine.data.WeatherProvider"></provider>
+            android:name="com.example.micky.sunswine.data.WeatherProvider"
+            android:enabled="true"
+            android:exported="true"></provider>
     </application>
     
 </manifest>
