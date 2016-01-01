@@ -59,8 +59,8 @@ public class ForecastAdapter extends CursorAdapter {
     }
 
     /*
-            Remember that these views are reused as needed.
-         */
+    Remember that these views are reused as needed.
+    */
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         int viewType = getItemViewType(cursor.getPosition());
@@ -93,9 +93,17 @@ public class ForecastAdapter extends CursorAdapter {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
         // Read weather icon ID from cursor
-        int weatherId = cursor.getInt(ForecastFragment.COL_WEATHER_ID);
-        // Use placeholder image for now
-        viewHolder.iconView.setImageResource(R.mipmap.ic_launcher);
+        int weatherId = cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
+
+        int imgRsrc;
+        switch(getItemViewType(cursor.getPosition())){
+            case VIEW_TYPE_TODAY:
+                viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
+                break;
+            case VIEW_TYPE_FUTURE_DAY:
+                viewHolder.iconView.setImageResource(Utility.getIconResourceForWeatherCondition(weatherId));
+                break;
+        }
 
         // TODO Read date from cursor
         long dateInMilliSeconds = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);

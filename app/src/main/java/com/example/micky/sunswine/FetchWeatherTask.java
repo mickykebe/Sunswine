@@ -259,7 +259,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
             // http://openweathermap.org/API#forecast
             final String FORECAST_BASE_URL =
                     "http://api.openweathermap.org/data/2.5/forecast/daily?";
-            final String QUERY_PARAM = "q";
+            final String QUERY_PARAM = "id";
             final String FORMAT_PARAM = "mode";
             final String UNITS_PARAM = "units";
             final String DAYS_PARAM = "cnt";
@@ -272,6 +272,8 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
                     .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
                     .appendQueryParameter(APPID_PARAM, BuildConfig.OPEN_WEATHER_MAP_API_KEY)
                     .build();
+
+            Log.v(LOG_TAG, builtUri.toString());
 
             URL url = new URL(builtUri.toString());
 
