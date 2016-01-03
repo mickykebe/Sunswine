@@ -10,45 +10,72 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
+
+    public String mLocation;
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mLocation = Utility.getPreferredLocation(this);
         setContentView(R.layout.activity_main);
-        Log.v(LOG_TAG, "onCreate()");
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.v(LOG_TAG, "onStart()");
+        if(findViewById(R.id.weather_detail_container) != null){
+            mTwoPane = true;
+
+            if(savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.weather_detail_container, new DetailActivityFragment(), DETAILFRAGMENT_TAG)
+                        .commit();
+            }
+        }
+        else{
+            mTwoPane = false;
+            getSupportActionBar().setElevation(0f);
+        }
+
+        ForecastFragment ff = (ForecastFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
+        ff.setUseTodayLayout(!mTwoPane);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.v(LOG_TAG, "onResume()");
+        String location = Utility.getPreferredLocation(this);
+
+        if(location != null && !location.equals(mLocation)){
+            ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
+            if(ff != null) {
+                ff.onLocationChanged();
+            }
+
+            DetailActivityFragment df = (DetailActivityFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
+            if(df != null){
+                df.onLocationChanged(location);
+            }
+            mLocation = location;
+        }
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        Log.v(LOG_TAG, "onPause()");
-    }
+    public void onItemSelected(Uri dateUri) {
+        if(mTwoPane){
+            DetailActivityFragment df = DetailActivityFragment.createDetailFragment(dateUri);
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.v(LOG_TAG, "onStop()");
-    }
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.weather_detail_container, df, DETAILFRAGMENT_TAG)
+                    .commit();
+            return;
+        }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.v(LOG_TAG, "onDestroy()");
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.setData(dateUri);
+        startActivity(intent);
     }
 
     @Override
@@ -80,8 +107,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openPreferredLocationInMap(){
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String location = sharedPref.getString(getString(R.string.pref_location_key), getString((R.string.pref_location_default)));
+        String location = Utility.getPreferredLocation(this);
 
         Uri geoLocation = Uri.parse("geo:0,0?q=").buildUpon()
                 .appendQueryParameter("q", location).build();
