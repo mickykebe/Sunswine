@@ -20,37 +20,19 @@ import java.util.Date;
 public class ForecastAdapter extends CursorAdapter {
     private final int VIEW_TYPE_TODAY = 0;
     private final int VIEW_TYPE_FUTURE_DAY = 1;
+    private boolean mUseTodayLayout;
 
     public ForecastAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
 
-    /**
-     * Prepare the weather high/lows for presentation.
-     */
-    private String formatHighLows(double high, double low) {
-        boolean isMetric = Utility.isMetric(mContext);
-        String highLowStr = Utility.formatTemperature(mContext, high, isMetric) + "/" + Utility.formatTemperature(mContext, low, isMetric);
-        return highLowStr;
-    }
-
-    /*
-        This is ported from FetchWeatherTask --- but now we go straight from the cursor to the
-        string.
-     */
-    private String convertCursorRowToUXFormat(Cursor cursor) {
-        String highAndLow = formatHighLows(
-                cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP),
-                cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP));
-
-        return Utility.formatDate(cursor.getLong(ForecastFragment.COL_WEATHER_DATE)) +
-                " - " + cursor.getString(ForecastFragment.COL_WEATHER_DESC) +
-                " - " + highAndLow;
+    public void setUseTodayLayout(boolean useTodayLayout){
+        mUseTodayLayout = useTodayLayout;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return (position == 0) ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
+        return (position == 0 && mUseTodayLayout) ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
     }
 
     @Override
@@ -95,8 +77,8 @@ public class ForecastAdapter extends CursorAdapter {
         // Read weather icon ID from cursor
         int weatherId = cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
 
-        int imgRsrc;
-        switch(getItemViewType(cursor.getPosition())){
+        int viewType = getItemViewType(cursor.getPosition());
+        switch(viewType){
             case VIEW_TYPE_TODAY:
                 viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
                 break;
@@ -107,7 +89,7 @@ public class ForecastAdapter extends CursorAdapter {
 
         // TODO Read date from cursor
         long dateInMilliSeconds = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
-        viewHolder.dateView.setText(Utility.getFriendlyDayString(context, dateInMilliSeconds));
+        viewHolder.dateView.setText(Utility.getFriendlyDayString(context, dateInMilliSeconds, viewType == VIEW_TYPE_TODAY));
 
         // TODO Read weather forecast from cursor
         String forecast = cursor.getString(ForecastFragment.COL_WEATHER_DESC);

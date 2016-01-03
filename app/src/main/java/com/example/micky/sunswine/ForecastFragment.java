@@ -33,7 +33,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     private static final String LOG_TAG = ForecastFragment.class.getSimpleName();
     private static final int FORECAST_LOADER = 0;
-    private ForecastAdapter forecastAdapter;
+    private ForecastAdapter mForecastAdapter;
+    private boolean mUseTodayLayout = true;
 
     private ListView mListView;
     private int mPosition;
@@ -41,6 +42,13 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     public interface Callback {
         public void onItemSelected(Uri dateUri);
+    }
+
+    protected void setUseTodayLayout(boolean useTodayLayout){
+        mUseTodayLayout = useTodayLayout;
+        if(mForecastAdapter != null) {
+            mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
+        }
     }
 
     private static final String[] FORECAST_COLUMNS = {
@@ -122,12 +130,13 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
 
-        forecastAdapter = new ForecastAdapter(getActivity(), null, 0);
+        mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
+        mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         mListView = (ListView) rootView.findViewById(R.id.list_view_forecast);
-        mListView.setAdapter(forecastAdapter);
+        mListView.setAdapter(mForecastAdapter);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -179,7 +188,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        forecastAdapter.swapCursor(data);
+        mForecastAdapter.swapCursor(data);
         if(mPosition != ListView.INVALID_POSITION){
             mListView.smoothScrollToPosition(mPosition);
         }
@@ -187,7 +196,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        forecastAdapter.swapCursor(null);
+        mForecastAdapter.swapCursor(null);
     }
 
 }

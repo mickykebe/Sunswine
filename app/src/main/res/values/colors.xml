@@ -2,4 +2,8 @@
 <resources>
     <color name="grey">#cccccc</color>
     <color name="sunswine_light_blue">#ff64c2f4</color>
+    <color name="sunswine_blue">#ff1ca8f4</color>
+    <color name="sunswine_dark_blue">#0288D1</color>
+
+    <color name="grey_700">#646464</color>
 </resources>
