@@ -1,8 +1,12 @@
 package com.example.micky.sunswine;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -21,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.micky.sunswine.data.WeatherContract;
+import com.example.micky.sunswine.service.SunswineService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -101,8 +106,14 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void updateWeather(){
-        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
-        weatherTask.execute(Utility.getPreferredLocation(getActivity()));
+        Context context = getActivity();
+
+        Intent alarmIntent = new Intent(context, SunswineService.AlarmReceiver.class)
+                .putExtra(SunswineService.LOCATION_QUERY_EXTRA, Utility.getPreferredLocation(context));
+
+        AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        PendingIntent pIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+        alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 5000, pIntent);
     }
 
     public void onLocationChanged(){

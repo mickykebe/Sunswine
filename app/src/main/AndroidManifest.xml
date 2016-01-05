@@ -43,6 +43,8 @@
             android:name="com.example.micky.sunswine.data.WeatherProvider"
             android:enabled="true"
             android:exported="true"></provider>
+        <service android:name=".service.SunswineService" />
+        <receiver android:name=".service.SunswineService$AlarmReceiver" />
     </application>
     
 </manifest>
