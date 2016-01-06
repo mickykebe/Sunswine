@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.micky.sunswine.sync.SunswineSyncAdapter;
+
 public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         ForecastFragment ff = (ForecastFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
         ff.setUseTodayLayout(!mTwoPane);
 
+        SunswineSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override
@@ -98,27 +101,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
-        else if(id == R.id.action_map){
-            openPreferredLocationInMap();
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void openPreferredLocationInMap(){
-        String location = Utility.getPreferredLocation(this);
-
-        Uri geoLocation = Uri.parse("geo:0,0?q=").buildUpon()
-                .appendQueryParameter("q", location).build();
-
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(geoLocation);
-        if(intent.resolveActivity(getPackageManager()) != null){
-            startActivity(intent);
-        }
-        else{
-            Log.d(LOG_TAG, "Couldn't call " + location + "on Map");
-        }
     }
 }

@@ -16,6 +16,13 @@
         android:entries="@array/pref_tempunit_labels"
         android:entryValues="@array/pref_tempunit_values"
         >
-
     </ListPreference>
+
+    <CheckBoxPreference
+        android:key="@string/pref_notificaiton_key"
+        android:title="@string/pref_notification_label"
+        android:defaultValue="@string/pref_notification_default"
+        android:summaryOff="@string/pref_notificaiton_summary_disabled"
+        android:summaryOn="@string/pref_notificaiton_summary_enabled"
+        />
 </PreferenceScreen>

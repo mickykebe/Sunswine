@@ -1,8 +1,12 @@
 package com.example.micky.sunswine;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -21,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.micky.sunswine.data.WeatherContract;
+import com.example.micky.sunswine.sync.SunswineSyncAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -101,13 +106,34 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void updateWeather(){
-        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
-        weatherTask.execute(Utility.getPreferredLocation(getActivity()));
+        SunswineSyncAdapter.syncImmediately(getActivity());
     }
 
     public void onLocationChanged(){
         updateWeather();
         getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
+    }
+
+    public void openPreferredLocationInMap(){
+
+        if(null != mForecastAdapter) {
+            Cursor c = mForecastAdapter.getCursor();
+            if(null != c) {
+                c.moveToPosition(0);
+                String lat = String.valueOf(c.getFloat(COL_COORD_LAT));
+                String lon = String.valueOf(c.getFloat(COL_COORD_LONG));
+                Uri geoLocation = Uri.parse("geo:" + lat + "," + lon);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(geoLocation);
+
+                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(intent);
+                } else {
+                    Log.d(LOG_TAG, "Couldn't call " + geoLocation.toString() + ", no receiving apps installed!");
+                }
+            }
+        }
     }
 
     @Override
@@ -118,8 +144,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_refresh) {
-            updateWeather();
+        if(id == R.id.action_map){
+            openPreferredLocationInMap();
             return true;
         }
 
