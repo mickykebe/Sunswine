@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.micky.sunswine.data.WeatherContract;
 import com.example.micky.sunswine.data.WeatherContract.WeatherEntry;
 
 /**
@@ -70,6 +71,14 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     private static final int COL_WEATHER_DEGREES = 7;
     private static final int COL_WEATHER_PRESSURE = 8;
     private static final int COL_WEATHER_CONDITION_ID = 9;
+
+    private static final String[] LOCATION_GEO_PROJECTION = {
+            WeatherContract.LocationEntry.COLUMN_COORD_LAT,
+            WeatherContract.LocationEntry.COLUMN_COORD_LONG
+    };
+
+    private static final int INDEX_LAT = 0;
+    private static final int INDEX_LONG = 1;
 
     public DetailActivityFragment() {
     }

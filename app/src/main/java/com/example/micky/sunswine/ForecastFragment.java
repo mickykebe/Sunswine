@@ -106,21 +106,34 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void updateWeather(){
-        /*Context context = getActivity();
-
-        Intent alarmIntent = new Intent(context, SunswineService.AlarmReceiver.class)
-                .putExtra(SunswineService.LOCATION_QUERY_EXTRA, Utility.getPreferredLocation(context));
-
-        AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        PendingIntent pIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
-        alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 5000, pIntent);*/
-
         SunswineSyncAdapter.syncImmediately(getActivity());
     }
 
     public void onLocationChanged(){
         updateWeather();
         getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
+    }
+
+    public void openPreferredLocationInMap(){
+
+        if(null != mForecastAdapter) {
+            Cursor c = mForecastAdapter.getCursor();
+            if(null != c) {
+                c.moveToPosition(0);
+                String lat = String.valueOf(c.getFloat(COL_COORD_LAT));
+                String lon = String.valueOf(c.getFloat(COL_COORD_LONG));
+                Uri geoLocation = Uri.parse("geo:" + lat + "," + lon);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(geoLocation);
+
+                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(intent);
+                } else {
+                    Log.d(LOG_TAG, "Couldn't call " + geoLocation.toString() + ", no receiving apps installed!");
+                }
+            }
+        }
     }
 
     @Override
@@ -131,8 +144,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_refresh) {
-            updateWeather();
+        if(id == R.id.action_map){
+            openPreferredLocationInMap();
             return true;
         }
 
