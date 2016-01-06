@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.micky.sunswine.sync.SunswineSyncAdapter;
+
 public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         ForecastFragment ff = (ForecastFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
         ff.setUseTodayLayout(!mTwoPane);
 
+        SunswineSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override
